@@ -1,0 +1,27 @@
+Conclusion:
+
+    Quiz Slice: The quizSlice.ts handles all quiz-related state, including questions, selected answers, current question index, and score.
+    Redux Store: The store.ts configures the Redux store, integrating the quizSlice.
+    Using Redux in Components: Components like TestPage and ResultPage now interact with the Redux state using useDispatch and useSelector.
+
+
+    src/
+|-- components/
+|   |-- DashboardPage.tsx
+|   |-- TestPage.tsx
+|   |-- ResultPage.tsx
+|   |-- LoginPage.tsx
+|   |-- PrivateRoute.tsx
+|   |-- QuestionCard.tsx (optional: reusable component for rendering a question)
+|   |-- NavigationButtons.tsx (optional: reusable component for Next/Back buttons)
+|-- App.tsx
+|-- index.tsx
+|-- store/
+|-- styles/
+
+
+Conclusion:
+
+    Quiz Slice: The quizSlice.ts handles all quiz-related state, including questions, selected answers, current question index, and score.
+    Redux Store: The store.ts configures the Redux store, integrating the quizSlice.
+    Using Redux in Components: Components like TestPage and ResultPage now interact with the Redux state using useDispatch and useSelector.
