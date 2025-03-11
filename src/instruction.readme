@@ -13,7 +13,11 @@ Conclusion:
 |   |-- LoginPage.tsx
 |   |-- PrivateRoute.tsx
 |   |-- QuestionCard.tsx (optional: reusable component for rendering a question)
-|   |-- NavigationButtons.tsx (optional: reusable component for Next/Back buttons)
+|-- redux/
+|   |-- store.tsx
+|   |-- quizSlice.tsx
+|   |-- authSlice.tsx
+|--
 |-- App.tsx
 |-- index.tsx
 |-- store/
@@ -25,3 +29,33 @@ Conclusion:
     Quiz Slice: The quizSlice.ts handles all quiz-related state, including questions, selected answers, current question index, and score.
     Redux Store: The store.ts configures the Redux store, integrating the quizSlice.
     Using Redux in Components: Components like TestPage and ResultPage now interact with the Redux state using useDispatch and useSelector.
+
+
+<QuestionCard
+  question={questions[currentQuestionIndex]?.text}
+  choices={questions[currentQuestionIndex]?.choices}
+  selectedAnswer={selectedAnswers[questions[currentQuestionIndex].id]}
+  onAnswerSelect={(answer) => handleOptionChange(answer, questions[currentQuestionIndex].id)}
+  questionId={questions[currentQuestionIndex].id}
+  isDisabled={currentQuestionIndex !== questions.length - 1} // Disable after the last question
+/>
+
+this means the for ID:1 the user answered correctly , diplay the scrore in percentage basis
+GET : http://localhost:8080/result
+{
+    "score": {
+        "1": true,
+        "2": false,
+        "3": false
+    }
+}
+
+POST : http://localhost:8080/response
+ BODY : {
+            "question_id":1,
+            "answer": 0
+        }
+
+Respone : {
+            "message": "Response recorded"
+        }

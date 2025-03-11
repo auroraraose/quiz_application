@@ -1,48 +1,33 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { loginRequest, loginSuccess, loginFailure } from '../redux/authSlice';
+import { registerUser } from '../redux/actions/authAction';
+import { AppDispatch, RootState } from '../redux/store';
 
 const RegisterPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  
+  const { isAuthenticated, loading, error } = useSelector((state: RootState) => state.auth);
 
-  const handleRegister = async (e: React.FormEvent) => {
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, navigate]);
+
+  const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate that passwords match
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      console.log('Passwords do not match');
       return;
     }
 
-    // Dispatch loginRequest to set loading state
-    dispatch(loginRequest());
-
-    try {
-      const response = await axios.post('http://localhost:8080/register', {
-        email,
-        password,
-      });
-
-      // Assuming the backend returns a token after successful registration
-      console.log('Registration successful:', response.data);
-
-      // Automatically log the user in after successful registration
-      dispatch(loginSuccess(response.data.token));
-
-      // Redirect to home page on success
-      navigate('/home');
-    } catch (err: any) {
-      console.error('Error registering:', err);
-      setError('Registration failed. Please try again.');
-      dispatch(loginFailure('Registration failed. Please try again.'));
-    }
+    dispatch(registerUser({ email, password }));
   };
 
   return (
@@ -76,7 +61,9 @@ const RegisterPage: React.FC = () => {
             required
           />
         </div>
-        <button type="submit">Register</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Registering...' : 'Register'}
+        </button>
         {error && <p style={{ color: 'red' }}>{error}</p>}
       </form>
     </div>
