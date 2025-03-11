@@ -18,8 +18,10 @@ const ResultPage: React.FC = () => {
       return;
     }
 
+
     if (isAuthenticated) {
-      dispatch(fetchResult(token)); 
+      dispatch(fetchResult(token));
+      console.log(result) 
     } else {
       navigate('/login');
     }
