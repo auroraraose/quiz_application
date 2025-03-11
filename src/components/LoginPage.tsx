@@ -1,37 +1,28 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { loginRequest, loginSuccess, loginFailure } from '../redux/authSlice';
+import { AppDispatch, RootState } from '../redux/store';
+import { loginUser } from '../redux/actions/authAction';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const dispatch = useDispatch();
+  
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  
+  const { isAuthenticated, loading, error } = useSelector((state: RootState) => state.auth);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    dispatch(loginRequest());
-
-    try {
-      const response = await axios.post('http://localhost:8080/login', {
-        email,
-        password,
-      });
-
-      console.log('Login successful:', response.data);
-
-      dispatch(loginSuccess(response.data.token));
-
-      navigate('/home');
-    } catch (err: any) {
-      console.error('Login failed:', err);
-      setError('Invalid credentials. Please try again.');
-      dispatch(loginFailure('Invalid credentials. Please try again.'));
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
     }
+  }, [isAuthenticated, navigate]);
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    dispatch(loginUser({ email, password }));
   };
 
   return (
@@ -56,7 +47,9 @@ const LoginPage: React.FC = () => {
             required
           />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
         {error && <p style={{ color: 'red' }}>{error}</p>}
       </form>
 
