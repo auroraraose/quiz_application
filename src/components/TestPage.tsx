@@ -13,7 +13,7 @@ const TestPage: React.FC = () => {
 
   const { token, isAuthenticated } = useSelector((state: RootState) => state.auth);
   const { questions, currentQuestionIndex, selectedAnswers } = useSelector((state: RootState) => state.quiz);
-   console.log(questions);
+  //  console.log(questions);
   const divRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
